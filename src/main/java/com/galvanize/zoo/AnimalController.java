@@ -25,4 +25,9 @@ public class AnimalController {
     public List<AnimalDto> fetchAll() {
         return animalService.fetchAll();
     }
+
+    @PostMapping("{name}/feed")
+    public void feed(@PathVariable String name) {
+        animalService.feed(name);
+    }
 }

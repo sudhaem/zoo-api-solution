@@ -2,6 +2,7 @@ package com.galvanize.zoo;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -47,5 +48,17 @@ class AnimalServiceTest {
                 new AnimalDto("monkey", Type.WALKING, Mood.UNHAPPY)
             )
         );
+    }
+
+    @Test
+    void feed() {
+        when(mockAnimalRepository.findByName("monkey"))
+            .thenReturn(new AnimalEntity("monkey", Type.WALKING));
+
+        subject.feed("monkey");
+
+        ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
+        verify(mockAnimalRepository).save(captor.capture());
+        assertThat(captor.getValue().getMood()).isEqualTo(Mood.HAPPY);
     }
 }

@@ -28,4 +28,10 @@ public class AnimalService {
             ))
             .collect(Collectors.toList());
     }
+
+    public void feed(String name) {
+        AnimalEntity animal = animalRepository.findByName(name);
+        animal.setMood(Mood.HAPPY);
+        animalRepository.save(animal);
+    }
 }
