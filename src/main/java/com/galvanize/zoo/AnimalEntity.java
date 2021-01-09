@@ -21,10 +21,12 @@ public class AnimalEntity {
 
     private String name;
     private Type type;
+    private Mood mood;
 
     public AnimalEntity(String name, Type type) {
         this.name = name;
         this.type = type;
+        this.mood = Mood.UNHAPPY;
     }
 
     public AnimalEntity() {

@@ -24,8 +24,8 @@ class AnimalControllerIT {
     ObjectMapper objectMapper;
 
     @Test
-    void createAnimals_fetchAnimals() throws Exception {
-        AnimalDto input = new AnimalDto("monkey", Type.WALKING);
+    void createAnimal_fetchAnimals() throws Exception {
+        AnimalDto input = new AnimalDto("monkey", Type.WALKING, null);
         mockMvc.perform(
             post("/animals")
                 .content(objectMapper.writeValueAsString(input))
@@ -37,7 +37,7 @@ class AnimalControllerIT {
             .andExpect(status().isOk())
             .andExpect(jsonPath("length()").value(1))
             .andExpect(jsonPath("[0].name").value("monkey"))
+            .andExpect(jsonPath("[0].mood").value(Mood.UNHAPPY.name()))
             .andExpect(jsonPath("[0].type").value(Type.WALKING.name()));
     }
-
 }

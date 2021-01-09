@@ -6,4 +6,5 @@ import lombok.Value;
 public class AnimalDto {
     String name;
     Type type;
+    Mood mood;
 }

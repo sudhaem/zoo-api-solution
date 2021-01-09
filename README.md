@@ -30,7 +30,7 @@ As zookeeper, I want to add animals to my zoo.
 ```gherkin
 Rule: Animal should have a name and a type (flying, swimming, walking)
 
-When I add an animalDto
+When I add an animal
 Then it is in my zoo
 ```
 
@@ -47,30 +47,30 @@ As a zookeeper, I want to feed my animals.
 ```gherkin
 Rule: Animal moods are unhappy or happy. They are unhappy by default.
 
-Given an animalDto is unhappy
+Given an animal is unhappy
 When I give it a treat
-Then the animalDto is happy
+Then the animal is happy
 
-Given an animalDto is happy
+Given an animal is happy
 When I give it a treat
-Then the animalDto is still happy
+Then the animal is still happy
 ```
 
 As a zookeeper, I want to maintain different types of habitats so that I can put different types of animals in them.
 
 ```gherkin
 Given I have an empty <habitat>
-When I put animalDto of <type> into a compatible habitat
-Then the animalDto is in the habitat
+When I put animal of <type> into a compatible habitat
+Then the animal is in the habitat
 
 Given I have an empty <habitat>
-When I put animalDto of <type> into an incompatible habitat
-Then the animalDto habitat should not change
-And the animalDto becomes unhappy
+When I put animal of <type> into an incompatible habitat
+Then the animal habitat should not change
+And the animal becomes unhappy
 
 Given I have an occuppied habitat
-When I put an animalDto into the occupied habitat
-Then the animalDto habitat should not change
+When I put an animal into the occupied habitat
+Then the animal habitat should not change
 
 |   type    |  habitat  |
 | --------- | --------- |

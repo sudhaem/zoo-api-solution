@@ -21,7 +21,11 @@ public class AnimalService {
     public List<AnimalDto> fetchAll() {
         return animalRepository.findAll()
             .stream()
-            .map(animalEntity -> new AnimalDto(animalEntity.getName(), animalEntity.getType()))
+            .map(animalEntity -> new AnimalDto(
+                animalEntity.getName(),
+                animalEntity.getType(),
+                animalEntity.getMood()
+            ))
             .collect(Collectors.toList());
     }
 }

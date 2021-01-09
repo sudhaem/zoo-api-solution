@@ -23,7 +23,7 @@ class AnimalServiceTest {
 
     @Test
     void create() {
-        AnimalDto eagle = new AnimalDto("eagle", Type.FLYING);
+        AnimalDto eagle = new AnimalDto("eagle", Type.FLYING, null);
         subject.create(eagle);
         verify(mockAnimalRepository).save(
             new AnimalEntity("eagle", Type.FLYING)
@@ -43,8 +43,8 @@ class AnimalServiceTest {
 
         assertThat(actual).isEqualTo(
             List.of(
-                new AnimalDto("eagle", Type.FLYING),
-                new AnimalDto("monkey", Type.WALKING)
+                new AnimalDto("eagle", Type.FLYING, Mood.UNHAPPY),
+                new AnimalDto("monkey", Type.WALKING, Mood.UNHAPPY)
             )
         );
     }
