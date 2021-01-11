@@ -1,4 +1,4 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
 public enum Mood {
     HAPPY, UNHAPPY

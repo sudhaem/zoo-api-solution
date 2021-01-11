@@ -1,5 +1,6 @@
 package com.galvanize.zoo;
 
+import com.galvanize.zoo.animal.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,10 +25,10 @@ class AnimalServiceTest {
 
     @Test
     void create() {
-        AnimalDto eagle = new AnimalDto("eagle", Type.FLYING, null);
+        AnimalDto eagle = new AnimalDto("eagle", AnimalType.FLYING, null);
         subject.create(eagle);
         verify(mockAnimalRepository).save(
-            new AnimalEntity("eagle", Type.FLYING)
+            new AnimalEntity("eagle", AnimalType.FLYING)
         );
     }
 
@@ -35,8 +36,8 @@ class AnimalServiceTest {
     void fetchAll() {
         when(mockAnimalRepository.findAll()).thenReturn(
             List.of(
-                new AnimalEntity("eagle", Type.FLYING),
-                new AnimalEntity("monkey", Type.WALKING)
+                new AnimalEntity("eagle", AnimalType.FLYING),
+                new AnimalEntity("monkey", AnimalType.WALKING)
             )
         );
 
@@ -44,8 +45,8 @@ class AnimalServiceTest {
 
         assertThat(actual).isEqualTo(
             List.of(
-                new AnimalDto("eagle", Type.FLYING, Mood.UNHAPPY),
-                new AnimalDto("monkey", Type.WALKING, Mood.UNHAPPY)
+                new AnimalDto("eagle", AnimalType.FLYING, Mood.UNHAPPY),
+                new AnimalDto("monkey", AnimalType.WALKING, Mood.UNHAPPY)
             )
         );
     }
@@ -53,7 +54,7 @@ class AnimalServiceTest {
     @Test
     void feed() {
         when(mockAnimalRepository.findByName("monkey"))
-            .thenReturn(new AnimalEntity("monkey", Type.WALKING));
+            .thenReturn(new AnimalEntity("monkey", AnimalType.WALKING));
 
         subject.feed("monkey");
 

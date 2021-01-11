@@ -1,7 +1,8 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 @EqualsAndHashCode
 @Getter
 @Setter
+@NoArgsConstructor
 public class AnimalEntity {
 
     @Id
@@ -20,15 +22,12 @@ public class AnimalEntity {
     private Long id;
 
     private String name;
-    private Type type;
+    private AnimalType type;
     private Mood mood;
 
-    public AnimalEntity(String name, Type type) {
+    public AnimalEntity(String name, AnimalType type) {
         this.name = name;
         this.type = type;
         this.mood = Mood.UNHAPPY;
-    }
-
-    public AnimalEntity() {
     }
 }

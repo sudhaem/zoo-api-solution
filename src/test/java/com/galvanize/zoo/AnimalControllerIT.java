@@ -1,6 +1,10 @@
 package com.galvanize.zoo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.galvanize.zoo.animal.AnimalDto;
+import com.galvanize.zoo.animal.AnimalRepository;
+import com.galvanize.zoo.animal.AnimalType;
+import com.galvanize.zoo.animal.Mood;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +38,7 @@ class AnimalControllerIT {
 
     @Test
     void create_fetchAll() throws Exception {
-        AnimalDto input = new AnimalDto("monkey", Type.WALKING, null);
+        AnimalDto input = new AnimalDto("monkey", AnimalType.WALKING, null);
         mockMvc.perform(
             post("/animals")
                 .content(objectMapper.writeValueAsString(input))
@@ -47,12 +51,12 @@ class AnimalControllerIT {
             .andExpect(jsonPath("length()").value(1))
             .andExpect(jsonPath("[0].name").value("monkey"))
             .andExpect(jsonPath("[0].mood").value(Mood.UNHAPPY.name()))
-            .andExpect(jsonPath("[0].type").value(Type.WALKING.name()));
+            .andExpect(jsonPath("[0].type").value(AnimalType.WALKING.name()));
     }
 
     @Test
     void feed() throws Exception {
-        AnimalDto monkey = new AnimalDto("monkey", Type.WALKING, null);
+        AnimalDto monkey = new AnimalDto("monkey", AnimalType.WALKING, null);
         mockMvc.perform(
             post("/animals")
                 .content(objectMapper.writeValueAsString(monkey))

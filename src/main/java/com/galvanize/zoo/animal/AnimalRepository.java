@@ -1,4 +1,4 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

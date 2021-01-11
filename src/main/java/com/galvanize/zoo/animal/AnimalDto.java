@@ -1,10 +1,10 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
 import lombok.Value;
 
 @Value
 public class AnimalDto {
     String name;
-    Type type;
+    AnimalType type;
     Mood mood;
 }
