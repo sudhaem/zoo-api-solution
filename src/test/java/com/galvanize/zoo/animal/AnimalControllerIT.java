@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.galvanize.zoo.habitat.HabitatEntity;
 import com.galvanize.zoo.habitat.HabitatRepository;
 import com.galvanize.zoo.habitat.HabitatType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.transaction.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class AnimalControllerIT {
 
     @Autowired
@@ -32,12 +34,6 @@ class AnimalControllerIT {
 
     @Autowired
     HabitatRepository habitatRepository;
-
-    @BeforeEach
-    void setUp() {
-        animalRepository.deleteAll();
-        habitatRepository.deleteAll();
-    }
 
     @Test
     void create_fetchAll() throws Exception {
@@ -99,5 +95,26 @@ class AnimalControllerIT {
             .andExpect(jsonPath("[0].name").value("eagle"))
             .andExpect(jsonPath("[0].mood").value(Mood.UNHAPPY.name()))
             .andExpect(jsonPath("[0].habitat").isEmpty());
+    }
+
+    @Test
+    void move_occupied() throws Exception {
+        animalRepository.save(new AnimalEntity("monkey", AnimalType.WALKING));
+
+        HabitatEntity habitat = new HabitatEntity("Monkey's Jungle", HabitatType.FOREST);
+        AnimalEntity chimp = new AnimalEntity("chimp", AnimalType.WALKING);
+        chimp.setHabitat(habitat);
+        habitat.setAnimal(chimp);
+        habitatRepository.save(habitat);
+
+        mockMvc.perform(post("/animals/monkey/move").content("Monkey's Jungle"))
+            .andExpect(status().isConflict());
+
+        mockMvc.perform(get("/animals"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("[0].name").value("monkey"))
+            .andExpect(jsonPath("[0].habitat").isEmpty())
+            .andExpect(jsonPath("[1].name").value("chimp"))
+            .andExpect(jsonPath("[1].habitat.name").value("Monkey's Jungle"));
     }
 }

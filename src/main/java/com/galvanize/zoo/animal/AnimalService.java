@@ -2,6 +2,7 @@ package com.galvanize.zoo.animal;
 
 import com.galvanize.zoo.habitat.HabitatDto;
 import com.galvanize.zoo.habitat.HabitatEntity;
+import com.galvanize.zoo.habitat.HabitatOccupiedException;
 import com.galvanize.zoo.habitat.HabitatRepository;
 import com.galvanize.zoo.habitat.HabitatType;
 import org.springframework.stereotype.Service;
@@ -57,17 +58,24 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
-    public void move(String name, String habitatName) throws IncompatibleTypeException {
+    public void move(String name, String habitatName) throws IncompatibleTypeException, HabitatOccupiedException {
         AnimalEntity animal = animalRepository.findByName(name);
         HabitatEntity habitat = habitatRepository.findByName(habitatName);
 
-        if (typeCompatibility.get(animal.getType()).equals(habitat.getType())) {
+        if (typeCompatibility.get(animal.getType()).equals(habitat.getType()) && habitat.getAnimal() == null) {
             animal.setHabitat(habitat);
             animalRepository.save(animal);
         } else {
             animal.setMood(Mood.UNHAPPY);
             animalRepository.save(animal);
-            throw new IncompatibleTypeException();
+
+            if (!typeCompatibility.get(animal.getType()).equals(habitat.getType())) {
+                throw new IncompatibleTypeException();
+            }
+
+            if (habitat.getAnimal() != null) {
+                throw new HabitatOccupiedException();
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,7 @@ public class AnimalEntity {
     private AnimalType type;
     private Mood mood;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private HabitatEntity habitat;
 
     public AnimalEntity(String name, AnimalType type) {

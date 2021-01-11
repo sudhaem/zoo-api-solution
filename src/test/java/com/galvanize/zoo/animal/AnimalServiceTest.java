@@ -2,6 +2,7 @@ package com.galvanize.zoo.animal;
 
 import com.galvanize.zoo.habitat.HabitatDto;
 import com.galvanize.zoo.habitat.HabitatEntity;
+import com.galvanize.zoo.habitat.HabitatOccupiedException;
 import com.galvanize.zoo.habitat.HabitatRepository;
 import com.galvanize.zoo.habitat.HabitatType;
 import org.junit.jupiter.api.Test;
@@ -99,6 +100,25 @@ class AnimalServiceTest {
 
         assertThatThrownBy(() -> subject.move("monkey", "Eagle's Nest"))
             .isInstanceOf(IncompatibleTypeException.class);
+
+        ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
+        verify(mockAnimalRepository).save(captor.capture());
+        assertThat(captor.getValue().getMood()).isEqualTo(Mood.UNHAPPY);
+        assertThat(captor.getValue().getHabitat()).isNull();
+    }
+
+    @Test
+    void move_occupied() {
+        AnimalEntity monkey = new AnimalEntity("monkey", AnimalType.WALKING);
+        monkey.setMood(Mood.HAPPY);
+        when(mockAnimalRepository.findByName("monkey")).thenReturn(monkey);
+
+        HabitatEntity habitatEntity = new HabitatEntity("Monkey's Jungle", HabitatType.FOREST);
+        habitatEntity.setAnimal(new AnimalEntity("Chimp", AnimalType.WALKING));
+        when(mockHabitatRepository.findByName("Monkey's Jungle")).thenReturn(habitatEntity);
+
+        assertThatThrownBy(() -> subject.move("monkey", "Monkey's Jungle"))
+            .isInstanceOf(HabitatOccupiedException.class);
 
         ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
         verify(mockAnimalRepository).save(captor.capture());
