@@ -39,7 +39,7 @@ public class AnimalController {
 
     @PostMapping(value = "{name}/move")
     public void move(@PathVariable String name,
-                     @RequestBody String habitatName) {
+                     @RequestBody String habitatName) throws IncompatibleTypeException {
         animalService.move(name, habitatName);
     }
 }

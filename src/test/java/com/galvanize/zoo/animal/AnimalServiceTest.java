@@ -1,11 +1,5 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
-import com.galvanize.zoo.animal.AnimalDto;
-import com.galvanize.zoo.animal.AnimalEntity;
-import com.galvanize.zoo.animal.AnimalRepository;
-import com.galvanize.zoo.animal.AnimalService;
-import com.galvanize.zoo.animal.AnimalType;
-import com.galvanize.zoo.animal.Mood;
 import com.galvanize.zoo.habitat.HabitatDto;
 import com.galvanize.zoo.habitat.HabitatEntity;
 import com.galvanize.zoo.habitat.HabitatRepository;
@@ -20,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +74,7 @@ class AnimalServiceTest {
     }
 
     @Test
-    void move() {
+    void move() throws Exception {
         when(mockAnimalRepository.findByName("monkey"))
             .thenReturn(new AnimalEntity("monkey", AnimalType.WALKING));
 
@@ -91,5 +86,23 @@ class AnimalServiceTest {
         ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
         verify(mockAnimalRepository).save(captor.capture());
         assertThat(captor.getValue().getHabitat()).isSameAs(habitatEntity);
+    }
+
+    @Test
+    void move_incompatible() {
+        AnimalEntity monkey = new AnimalEntity("monkey", AnimalType.WALKING);
+        monkey.setMood(Mood.HAPPY);
+        when(mockAnimalRepository.findByName("monkey")).thenReturn(monkey);
+
+        HabitatEntity habitatEntity = new HabitatEntity("Eagle's Nest", HabitatType.NEST);
+        when(mockHabitatRepository.findByName("Eagle's Nest")).thenReturn(habitatEntity);
+
+        assertThatThrownBy(() -> subject.move("monkey", "Eagle's Nest"))
+            .isInstanceOf(IncompatibleTypeException.class);
+
+        ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
+        verify(mockAnimalRepository).save(captor.capture());
+        assertThat(captor.getValue().getMood()).isEqualTo(Mood.UNHAPPY);
+        assertThat(captor.getValue().getHabitat()).isNull();
     }
 }

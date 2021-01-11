@@ -1,8 +1,6 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.habitat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galvanize.zoo.habitat.HabitatDto;
-import com.galvanize.zoo.habitat.HabitatType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

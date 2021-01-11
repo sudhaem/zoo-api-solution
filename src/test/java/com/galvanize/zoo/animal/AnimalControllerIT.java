@@ -1,11 +1,6 @@
-package com.galvanize.zoo;
+package com.galvanize.zoo.animal;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.galvanize.zoo.animal.AnimalDto;
-import com.galvanize.zoo.animal.AnimalEntity;
-import com.galvanize.zoo.animal.AnimalRepository;
-import com.galvanize.zoo.animal.AnimalType;
-import com.galvanize.zoo.animal.Mood;
 import com.galvanize.zoo.habitat.HabitatEntity;
 import com.galvanize.zoo.habitat.HabitatRepository;
 import com.galvanize.zoo.habitat.HabitatType;
@@ -19,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +36,7 @@ class AnimalControllerIT {
     @BeforeEach
     void setUp() {
         animalRepository.deleteAll();
+        habitatRepository.deleteAll();
     }
 
     @Test
@@ -66,9 +61,7 @@ class AnimalControllerIT {
     void feed() throws Exception {
         animalRepository.save(new AnimalEntity("monkey", AnimalType.WALKING));
 
-        mockMvc.perform(
-            post("/animals/monkey/feed")
-        )
+        mockMvc.perform(post("/animals/monkey/feed"))
             .andExpect(status().isOk());
 
         mockMvc.perform(get("/animals"))
@@ -82,16 +75,29 @@ class AnimalControllerIT {
         animalRepository.save(new AnimalEntity("monkey", AnimalType.WALKING));
         habitatRepository.save(new HabitatEntity("Monkey's Jungle", HabitatType.FOREST));
 
-        mockMvc.perform(
-            post("/animals/monkey/move")
-                .content("Monkey's Jungle")
-        )
-            .andExpect(status().isOk())
-            .andDo(print());
+        mockMvc.perform(post("/animals/monkey/move").content("Monkey's Jungle"))
+            .andExpect(status().isOk());
 
         mockMvc.perform(get("/animals"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("[0].name").value("monkey"))
             .andExpect(jsonPath("[0].habitat.name").value("Monkey's Jungle"));
+    }
+
+    @Test
+    void move_incompatible() throws Exception {
+        AnimalEntity eagle = new AnimalEntity("eagle", AnimalType.FLYING);
+        eagle.setMood(Mood.HAPPY);
+        animalRepository.save(eagle);
+        habitatRepository.save(new HabitatEntity("Monkey's Jungle", HabitatType.FOREST));
+
+        mockMvc.perform(post("/animals/eagle/move").content("Monkey's Jungle"))
+            .andExpect(status().isConflict());
+
+        mockMvc.perform(get("/animals"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("[0].name").value("eagle"))
+            .andExpect(jsonPath("[0].mood").value(Mood.UNHAPPY.name()))
+            .andExpect(jsonPath("[0].habitat").isEmpty());
     }
 }

@@ -3,21 +3,29 @@ package com.galvanize.zoo.animal;
 import com.galvanize.zoo.habitat.HabitatDto;
 import com.galvanize.zoo.habitat.HabitatEntity;
 import com.galvanize.zoo.habitat.HabitatRepository;
+import com.galvanize.zoo.habitat.HabitatType;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
-    private HabitatRepository habitatRepository;
+    private final HabitatRepository habitatRepository;
+    private final Map<AnimalType, HabitatType> typeCompatibility;
 
     public AnimalService(AnimalRepository animalRepository,
                          HabitatRepository habitatRepository) {
         this.animalRepository = animalRepository;
         this.habitatRepository = habitatRepository;
+        typeCompatibility = new HashMap<>();
+        typeCompatibility.put(AnimalType.FLYING, HabitatType.NEST);
+        typeCompatibility.put(AnimalType.SWIMMING, HabitatType.OCEAN);
+        typeCompatibility.put(AnimalType.WALKING, HabitatType.FOREST);
     }
 
     public void create(AnimalDto animalDto) {
@@ -49,12 +57,17 @@ public class AnimalService {
         animalRepository.save(animal);
     }
 
-    public void move(String name, String habitatName) {
+    public void move(String name, String habitatName) throws IncompatibleTypeException {
         AnimalEntity animal = animalRepository.findByName(name);
         HabitatEntity habitat = habitatRepository.findByName(habitatName);
 
-        animal.setHabitat(habitat);
-
-        animalRepository.save(animal);
+        if (typeCompatibility.get(animal.getType()).equals(habitat.getType())) {
+            animal.setHabitat(habitat);
+            animalRepository.save(animal);
+        } else {
+            animal.setMood(Mood.UNHAPPY);
+            animalRepository.save(animal);
+            throw new IncompatibleTypeException();
+        }
     }
 }
