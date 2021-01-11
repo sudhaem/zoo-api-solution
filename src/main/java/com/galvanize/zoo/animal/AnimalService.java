@@ -62,20 +62,15 @@ public class AnimalService {
         AnimalEntity animal = animalRepository.findByName(name);
         HabitatEntity habitat = habitatRepository.findByName(habitatName);
 
-        if (typeCompatibility.get(animal.getType()).equals(habitat.getType()) && habitat.getAnimal() == null) {
-            animal.setHabitat(habitat);
-            animalRepository.save(animal);
-        } else {
+        if (!typeCompatibility.get(animal.getType()).equals(habitat.getType())) {
             animal.setMood(Mood.UNHAPPY);
             animalRepository.save(animal);
-
-            if (!typeCompatibility.get(animal.getType()).equals(habitat.getType())) {
-                throw new IncompatibleTypeException();
-            }
-
-            if (habitat.getAnimal() != null) {
-                throw new HabitatOccupiedException();
-            }
+            throw new IncompatibleTypeException();
+        } else if (habitat.getAnimal() != null) {
+            throw new HabitatOccupiedException();
+        } else {
+            animal.setHabitat(habitat);
+            animalRepository.save(animal);
         }
     }
 }

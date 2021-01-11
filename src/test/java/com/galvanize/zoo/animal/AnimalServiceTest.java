@@ -16,8 +16,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AnimalServiceTest {
@@ -120,9 +119,6 @@ class AnimalServiceTest {
         assertThatThrownBy(() -> subject.move("monkey", "Monkey's Jungle"))
             .isInstanceOf(HabitatOccupiedException.class);
 
-        ArgumentCaptor<AnimalEntity> captor = ArgumentCaptor.forClass(AnimalEntity.class);
-        verify(mockAnimalRepository).save(captor.capture());
-        assertThat(captor.getValue().getMood()).isEqualTo(Mood.UNHAPPY);
-        assertThat(captor.getValue().getHabitat()).isNull();
+        verify(mockAnimalRepository, never()).save(any());
     }
 }
