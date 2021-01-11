@@ -1,6 +1,10 @@
 package com.galvanize.zoo;
 
-import com.galvanize.zoo.habitat.*;
+import com.galvanize.zoo.habitat.HabitatDto;
+import com.galvanize.zoo.habitat.HabitatEntity;
+import com.galvanize.zoo.habitat.HabitatRepository;
+import com.galvanize.zoo.habitat.HabitatService;
+import com.galvanize.zoo.habitat.HabitatType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
