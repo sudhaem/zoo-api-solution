@@ -33,9 +33,23 @@ public class AnimalService {
         animalRepository.save(new AnimalEntity(animalDto.getName(), animalDto.getType()));
     }
 
-    public List<AnimalDto> fetchAll() {
+    public List<AnimalDto> fetchAll(AnimalType type, Mood mood) {
         return animalRepository.findAll()
             .stream()
+            .filter(animalEntity -> {
+                if (type != null) {
+                    return animalEntity.getType().equals(type);
+                } else {
+                    return true;
+                }
+            })
+            .filter(animalEntity -> {
+                if (mood != null) {
+                    return animalEntity.getMood().equals(mood);
+                } else {
+                    return true;
+                }
+            })
             .map(animalEntity -> {
                 HabitatDto habitat = animalEntity.getHabitat() == null ? null :
                     new HabitatDto(

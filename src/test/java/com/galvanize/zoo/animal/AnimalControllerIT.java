@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -116,5 +117,22 @@ class AnimalControllerIT {
             .andExpect(jsonPath("[0].habitat").isEmpty())
             .andExpect(jsonPath("[1].name").value("chimp"))
             .andExpect(jsonPath("[1].habitat.name").value("Monkey's Jungle"));
+    }
+
+    @Test
+    void fetch_withParams() throws Exception {
+        AnimalEntity monkey = new AnimalEntity("monkey", AnimalType.WALKING);
+        AnimalEntity eagle = new AnimalEntity("eagle", AnimalType.FLYING);
+        AnimalEntity whale = new AnimalEntity("whale", AnimalType.SWIMMING);
+        AnimalEntity chimp = new AnimalEntity("chimp", AnimalType.WALKING);
+        chimp.setMood(Mood.HAPPY);
+        animalRepository.saveAll(List.of(monkey, eagle, whale, chimp));
+
+        mockMvc.perform(get("/animals?mood=HAPPY&type=WALKING"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("length()").value(1))
+            .andExpect(jsonPath("[0].name").value("chimp"))
+            .andExpect(jsonPath("[0].mood").value(Mood.HAPPY.name()))
+            .andExpect(jsonPath("[0].type").value(AnimalType.WALKING.name()));
     }
 }

@@ -50,7 +50,7 @@ class AnimalServiceTest {
             )
         );
 
-        List<AnimalDto> actual = subject.fetchAll();
+        List<AnimalDto> actual = subject.fetchAll(null, null);
 
         assertThat(actual).isEqualTo(
             List.of(
@@ -120,5 +120,19 @@ class AnimalServiceTest {
             .isInstanceOf(HabitatOccupiedException.class);
 
         verify(mockAnimalRepository, never()).save(any());
+    }
+
+    @Test
+    void fetch_withParams() {
+        AnimalEntity monkey = new AnimalEntity("monkey", AnimalType.WALKING);
+        AnimalEntity eagle = new AnimalEntity("eagle", AnimalType.FLYING);
+        AnimalEntity whale = new AnimalEntity("whale", AnimalType.SWIMMING);
+        AnimalEntity chimp = new AnimalEntity("chimp", AnimalType.WALKING);
+        chimp.setMood(Mood.HAPPY);
+        when(mockAnimalRepository.findAll()).thenReturn(List.of(monkey, eagle, whale, chimp));
+
+        List<AnimalDto> actual = subject.fetchAll(AnimalType.WALKING, Mood.HAPPY);
+
+        assertThat(actual).containsExactly(new AnimalDto("chimp", AnimalType.WALKING, Mood.HAPPY, null));
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,8 +29,9 @@ public class AnimalController {
     }
 
     @GetMapping
-    public List<AnimalDto> fetchAll() {
-        return animalService.fetchAll();
+    public List<AnimalDto> fetchAll(@RequestParam(required = false) AnimalType type,
+                                    @RequestParam(required = false) Mood mood) {
+        return animalService.fetchAll(type, mood);
     }
 
     @PostMapping("{name}/feed")
