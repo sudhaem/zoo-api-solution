@@ -1,5 +1,6 @@
 package com.galvanize.zoo.habitat;
 
+import com.galvanize.zoo.animal.AnimalEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -39,13 +40,31 @@ class HabitatServiceTest {
             )
         );
 
-        List<HabitatDto> actual = subject.fetchAll();
+        List<HabitatDto> actual = subject.fetchAll(false);
 
         assertThat(actual).isEqualTo(
             List.of(
                 new HabitatDto("Eagle's Nest", HabitatType.NEST),
                 new HabitatDto("Monkey's Jungle", HabitatType.FOREST)
             )
+        );
+    }
+
+    @Test
+    void fetchAll_withFilter() {
+        HabitatEntity nest = new HabitatEntity("Eagle's Nest", HabitatType.NEST);
+        nest.setAnimal(new AnimalEntity());
+        when(mockHabitatRepository.findAll()).thenReturn(
+            List.of(
+                nest,
+                new HabitatEntity("Monkey's Jungle", HabitatType.FOREST)
+            )
+        );
+
+        List<HabitatDto> actual = subject.fetchAll(true);
+
+        assertThat(actual).containsExactly(
+            new HabitatDto("Monkey's Jungle", HabitatType.FOREST)
         );
     }
 }

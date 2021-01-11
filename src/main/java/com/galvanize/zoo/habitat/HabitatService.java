@@ -20,10 +20,17 @@ public class HabitatService {
         );
     }
 
-    public List<HabitatDto> fetchAll() {
+    public List<HabitatDto> fetchAll(boolean onlyShowEmpty) {
         return habitatRepository
             .findAll()
             .stream()
+            .filter(habitatEntity -> {
+                if (onlyShowEmpty) {
+                    return habitatEntity.getAnimal() == null;
+                } else {
+                    return true;
+                }
+            })
             .map(habitatEntity -> new HabitatDto(habitatEntity.getName(), habitatEntity.getType()))
             .collect(Collectors.toList());
     }
