@@ -1,5 +1,6 @@
 package com.galvanize.zoo;
 
+import com.galvanize.zoo.animal.AnimalExistException;
 import com.galvanize.zoo.animal.IncompatibleTypeException;
 import com.galvanize.zoo.habitat.HabitatOccupiedException;
 import org.springframework.http.HttpStatus;
@@ -18,5 +19,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(HabitatOccupiedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleHabitatOccupiedException() {
+    }
+
+    @ExceptionHandler(AnimalExistException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void handleAnimalExistException() {
     }
 }

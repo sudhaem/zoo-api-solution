@@ -24,7 +24,7 @@ public class AnimalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody AnimalDto animalDto) {
+    public void create(@RequestBody AnimalDto animalDto) throws Exception {
         animalService.create(animalDto);
     }
 

@@ -55,6 +55,19 @@ class AnimalControllerIT {
     }
 
     @Test
+    void create_conflict() throws Exception {
+        animalRepository.save(new AnimalEntity("monkey", AnimalType.WALKING));
+
+        AnimalDto input = new AnimalDto("monkey", AnimalType.WALKING, null, null);
+        mockMvc.perform(
+            post("/animals")
+                .content(objectMapper.writeValueAsString(input))
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isConflict());
+    }
+
+    @Test
     void feed() throws Exception {
         animalRepository.save(new AnimalEntity("monkey", AnimalType.WALKING));
 

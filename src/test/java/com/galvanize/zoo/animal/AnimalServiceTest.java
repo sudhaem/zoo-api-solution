@@ -31,12 +31,22 @@ class AnimalServiceTest {
     AnimalService subject;
 
     @Test
-    void create() {
+    void create() throws Exception {
         AnimalDto eagle = new AnimalDto("eagle", AnimalType.FLYING, null, null);
         subject.create(eagle);
         verify(mockAnimalRepository).save(
             new AnimalEntity("eagle", AnimalType.FLYING)
         );
+    }
+
+    @Test
+    void create_conflict() {
+        when(mockAnimalRepository.findAll()).thenReturn(List.of(new AnimalEntity("eagle", AnimalType.FLYING)));
+
+        AnimalDto eagle = new AnimalDto("eagle", AnimalType.FLYING, null, null);
+        assertThatThrownBy(() -> subject.create(eagle)).isInstanceOf(AnimalExistException.class);
+
+        verify(mockAnimalRepository, never()).save(any());
     }
 
     @Test

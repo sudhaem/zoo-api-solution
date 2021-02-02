@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,8 +30,17 @@ public class AnimalService {
         typeCompatibility.put(AnimalType.WALKING, HabitatType.FOREST);
     }
 
-    public void create(AnimalDto animalDto) {
-        animalRepository.save(new AnimalEntity(animalDto.getName(), animalDto.getType()));
+    public void create(AnimalDto animalDto) throws AnimalExistException {
+        Optional<AnimalEntity> animalExists = animalRepository.findAll()
+            .stream()
+            .filter(animalEntity -> animalEntity.getName().equals(animalDto.getName()))
+            .findAny();
+
+        if (animalExists.isPresent()) {
+            throw new AnimalExistException();
+        } else {
+            animalRepository.save(new AnimalEntity(animalDto.getName(), animalDto.getType()));
+        }
     }
 
     public List<AnimalDto> fetchAll(AnimalType type, Mood mood) {
