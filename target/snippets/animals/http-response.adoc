@@ -1,0 +1,8 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 98
+
+[{"name":"monkey","type":"WALKING","mood":"UNHAPPY","habitat":{"name":"savanah","type":"FOREST"}}]
+----

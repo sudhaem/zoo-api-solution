@@ -1,0 +1,8 @@
+.+/animals/{name}/move+
+|===
+|Parameter|Description
+
+|`+name+`
+|animal to move
+
+|===

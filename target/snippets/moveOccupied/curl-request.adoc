@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/animals/monkey/move' -i -X POST \
+    -d 'Monkey's Jungle'
+----

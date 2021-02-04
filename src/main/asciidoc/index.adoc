@@ -1,0 +1,77 @@
+= Zoo API
+
+== Get All Animals
+
+.request
+include::{snippets}/animals/http-request.adoc[]
+
+.response
+include::{snippets}/animals/http-response.adoc[]
+
+.response fields
+include::{snippets}/animals/response-fields.adoc[]
+
+
+== Get All Animals Matching Selected Mood And Type
+
+.request
+include::{snippets}/animalsByParams/http-request.adoc[]
+
+.response
+include::{snippets}/animalsByParams/http-response.adoc[]
+
+.response fields
+include::{snippets}/animalsByParams/response-fields.adoc[]
+
+== Feed An Animal
+
+.request
+include::{snippets}/feed/http-request.adoc[]
+
+.response
+include::{snippets}/feed/http-response.adoc[]
+
+== Assign Animal To Habitat
+
+.request
+include::{snippets}/move/http-request.adoc[]
+
+.response
+include::{snippets}/move/http-response.adoc[]
+
+.path parameters
+include::{snippets}/move/path-parameters.adoc[]
+
+== Saving Animal With Name Already In Database Throws Exception
+
+.request
+include::{snippets}/saveAnimalConflict/http-request.adoc[]
+
+.response
+include::{snippets}/saveAnimalConflict/http-response.adoc[]
+
+== Moving Animal Into Incompatible Habitat Throws Exception
+
+.request
+include::{snippets}/moveIncompatible/http-request.adoc[]
+
+.response
+include::{snippets}/moveIncompatible/http-response.adoc[]
+
+.path parameters
+include::{snippets}/moveIncompatible/path-parameters.adoc[]
+
+== Moving Animal Into Occupied Habitat Throws Exception
+
+.request
+include::{snippets}/moveOccupied/http-request.adoc[]
+
+.response
+include::{snippets}/moveOccupied/http-response.adoc[]
+
+.path parameters
+include::{snippets}/moveOccupied/path-parameters.adoc[]
+
+
+
+

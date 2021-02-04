@@ -1,0 +1,8 @@
+[source,http,options="nowrap"]
+----
+POST /animals/monkey/move HTTP/1.1
+Content-Length: 15
+Host: localhost:8080
+
+Monkey's Jungle
+----

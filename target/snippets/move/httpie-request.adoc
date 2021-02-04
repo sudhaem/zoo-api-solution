@@ -1,0 +1,4 @@
+[source,bash]
+----
+$ echo 'Monkey's Jungle' | http POST 'http://localhost:8080/animals/monkey/move'
+----

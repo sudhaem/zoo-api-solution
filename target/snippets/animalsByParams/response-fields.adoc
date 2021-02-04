@@ -1,0 +1,32 @@
+|===
+|Path|Type|Description
+
+|`+[]+`
+|`+Array+`
+|array of animals
+
+|`+[].name+`
+|`+String+`
+|name of animal
+
+|`+[].mood+`
+|`+String+`
+|animal's mood
+
+|`+[].type+`
+|`+String+`
+|type of animal
+
+|`+[].habitat+`
+|`+Object+`
+|animal's habitat
+
+|`+[].habitat.name+`
+|`+String+`
+|animal's habitat name
+
+|`+[].habitat.type+`
+|`+String+`
+|animal's habitat type
+
+|===
