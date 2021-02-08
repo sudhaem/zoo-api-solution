@@ -4,6 +4,7 @@ import lombok.Value;
 
 @Value
 public class HabitatDto {
-    String name;
+
+    String  name;
     HabitatType type;
 }
